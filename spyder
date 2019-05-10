@@ -1,0 +1,65 @@
+import requests
+from bs4 import BeautifulSoup
+
+nars_product_cat = {'palettes', 'brushes', 'face', 'cheeks', 'lips', 'eyes', 'multi-use'}
+
+url = 'https://www.narscosmetics.com/USA/{}'
+
+##for cat in nars_product_cat:
+##    parse_page_soup(url.format(cat))
+
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                  'Chrome/69.0.3497.92 Safari/537.36',
+}
+
+testurl = "https://www.narscosmetics.com/USA/lips"
+res = requests.get(testurl, headers=HEADERS)
+res.encoding = "GB2312"
+soup = BeautifulSoup(res.text, "html.parser")
+# for child in soup.children:
+#    print(type(child))
+
+# html_body is a tag name of tag <body>
+html_body = soup.body
+# print(tag_body)
+
+# tag['attribute'] returns the value of required attribute in the tag
+print('print class next line?')
+print(html_body['class'])
+# multiple classes can be applied to one tag
+
+# every tag has a name. It can be accessed by using tag.name
+print(html_body.name)
+
+##a string corresponds to a bit of text within a tag
+##no string in this tag html_body
+print(html_body.string)
+
+##tag.contents returns all direct children of the tag as a list
+bodys_direct_children = html_body.contents
+##print(len(bodys_direct_children))
+##for child in html_body.children:
+##    print(child.string)
+product_div = html_body.find_all('div', class_='pt_product-search-result category')
+print(len(product_div))
+product_main = product_div[0].find_all('div', id='main')
+print(len(product_main))
+##product_list = product_main[0].find_all(class_ = 'content-wrap search-result-container')
+product_list = product_main[0].find_all(id='search-result-items')[0].find_all('a')
+img_tag = product_list[16].find('img')
+print(img_tag)
+print(len(product_list))
+
+for item in product_list:
+    img_tag = item.find('img')
+    s = img_tag.get('data-src')
+    print(s)
+
+# ans = soup.find_all('a', class_='swatchanchor')
+# print(ans)
+# for k in ans:
+#    ##print(k)
+#    print(k['title'])
+
+
